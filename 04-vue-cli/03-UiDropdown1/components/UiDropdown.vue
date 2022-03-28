@@ -1,19 +1,15 @@
 <template>
-  <div class="dropdown dropdown_opened">
-    <button type="button" class="dropdown__toggle dropdown__toggle_icon">
-      <ui-icon icon="tv" class="dropdown__icon" />
-      <span>Title</span>
+  <div class="dropdown" :class="{'dropdown_opened': isOpen}">
+    <button type="button" class="dropdown__toggle" :class="{'dropdown__toggle_icon': hasIcon}" @click="toggle">
+      <ui-icon :icon="selected.icon" class="dropdown__icon" />
+      <span>{{ selected.text }}</span>
     </button>
 
-    <div class="dropdown__menu" role="listbox">
-      <button class="dropdown__item dropdown__item_icon" role="option" type="button">
-        <ui-icon icon="tv" class="dropdown__icon" />
-        Option 1
-      </button>
-      <button class="dropdown__item dropdown__item_icon" role="option" type="button">
-        <ui-icon icon="tv" class="dropdown__icon" />
-        Option 2
-      </button>
+    <div class="dropdown__menu" role="listbox" v-show="isOpen">
+      <button class="dropdown__item" :class="{'dropdown__item_icon': hasIcon}" role="option" type="button" v-for="option in options" @click="select(option.value)">
+        <ui-icon :icon="option.icon" class="dropdown__icon" />
+        {{ option.text }}
+      </button>     
     </div>
   </div>
 </template>
@@ -23,7 +19,48 @@ import UiIcon from './UiIcon';
 
 export default {
   name: 'UiDropdown',
-
+  props: {
+    options: {
+      type: Array,
+      required: true
+    },
+    modelValue: {
+      type: String
+    },
+    title: {
+      type: String,
+      required: true
+    }
+  },
+  data() {
+    return {
+      isOpen: false
+    }
+  },
+  computed: {
+    selected() {
+      if (this.modelValue) {
+        return this.options.find(element => {
+          return element.value === this.modelValue;
+        });
+      }
+      return {text: this.title, icon: null};
+    },
+    hasIcon() {
+      return this.options.some(element => {
+        return element.icon;
+      });
+    }
+  },
+  methods: {
+    select(val) {
+      this.$emit('update:modelValue', val);
+      this.isOpen = false;
+    },
+    toggle() {
+      this.isOpen = !this.isOpen;
+    }
+  },
   components: { UiIcon },
 };
 </script>
