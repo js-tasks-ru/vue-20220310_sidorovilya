@@ -12,5 +12,10 @@ export const router = createRouter({
       path: '/page-b',
       component: () => import('../views/PageB'),
     },
+    {
+      name: 'NotFound',
+      path: '/:pathMatch(.*)*',
+      component: () => import('../views/PageNotFound.vue'),
+    }
   ],
 });
