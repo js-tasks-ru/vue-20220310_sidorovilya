@@ -41,4 +41,22 @@ export const router = createRouter({
       ],
     },
   ],
+
+  scrollBehavior(to, from, savedPosition) {  
+    if (savedPosition) { 
+      console.log('savedPosition');
+      return savedPosition;
+    } else if (to.hash) {
+      console.log('hash');
+      return {
+        el: to.hash,
+      };
+    } else if (from.meta.saveScrollPosition && to.meta.saveScrollPosition) {
+      console.log('meta');
+      return false;
+    } else {
+      console.log('default');
+      return { top: 0, left: 0 };
+    }
+  },
 });
