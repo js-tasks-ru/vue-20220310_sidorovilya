@@ -1,8 +1,8 @@
 <template>
   <div class="image-uploader">
-    <label class="image-uploader__preview image-uploader__preview-loading" style="--bg-url: url('/link.jpeg')">
-      <span class="image-uploader__text">Загрузить изображение</span>
-      <input type="file" accept="image/*" class="image-uploader__input" />
+    <label class="image-uploader__preview" :class="{'image-uploader__preview-loading':isLoading}" :style="style">
+      <span class="image-uploader__text">{{ btnText }}</span>
+      <input type="file" accept="image/*" class="image-uploader__input" v-bind="$attrs" @click="clickHandler" @change="selectFile" ref="input" />
     </label>
   </div>
 </template>
@@ -10,6 +10,75 @@
 <script>
 export default {
   name: 'UiImageUploader',
+  inheritAttrs: false,
+  props: {
+    preview: String,
+    uploader: Function
+  },
+  data() {
+    return {
+      isLoading: false,
+      icon: this.preview
+    }
+  },
+  methods: {
+    clickHandler(event) {
+      if (this.state === 'filled') {
+        event.preventDefault();
+        this.icon = undefined;
+        this.$refs['input'].value = null;
+        this.$emit('remove');
+      }      
+    },
+    selectFile(event) {
+      let file = event.target.files[0];
+      this.$emit('select', file);
+      this.icon = URL.createObjectURL(file);
+
+      if (this.uploader) {
+        this.isLoading = true;
+        this.uploader(file).then(response => {
+          this.$emit('upload', response);
+        }, error => {
+          this.icon = undefined;
+          this.$refs['input'].value = null;
+          this.$emit('error', error);
+        }).finally(() => {
+          this.isLoading = false;          
+        });
+      }
+    }
+  },
+  computed: {
+    state() {
+      if (this.isLoading) {
+        return 'loading'
+      } else if (this.icon) {
+        return 'filled'
+      } else {
+        return 'empty';
+      }
+    },
+    btnText() {
+      switch (this.state) {
+        case 'empty':
+          return 'Загрузить изображение';
+          break;
+        case 'loading':
+          return 'Загрузка...';
+          break;
+        case 'filled':
+          return 'Удалить изображение';
+          break;
+      }
+    },
+    style() {      
+      if (this.icon) {
+        return `--bg-url: url(${this.icon})`;
+      } 
+      return null;
+    }    
+  }  
 };
 </script>
 
