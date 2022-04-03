@@ -8,7 +8,7 @@
 
 <script>
 import UiInput from './UiInput';
-import UiIcon from './UiIcon';
+
 export default {
   name: 'UiInputDate',
   props: {
@@ -73,6 +73,6 @@ export default {
       return null;
     }
   },
-  components: { UiInput, UiIcon },
+  components: { UiInput},
 };
 </script>
