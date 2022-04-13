@@ -199,7 +199,7 @@ export default {
       if (!newValue || !oldValue) {
         return;
       }
-         
+
       let dateEnd = this.getDateByTime(this.innerAgendaItem.endsAt);
       let dateStart = this.getDateByTime(oldValue);        
       let duration = dateEnd.getTime() - dateStart.getTime();
@@ -207,7 +207,11 @@ export default {
       let dateStartNew = this.getDateByTime(newValue);          
       let dateEndNew = new Date( dateStartNew.getTime() + duration );
 
-      let localeTime = dateEndNew.toLocaleTimeString();          
+      let localeTime = dateEndNew.toLocaleString('en-US', {    
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
       this.innerAgendaItem.endsAt = localeTime.split(':')[0] + ':' + localeTime.split(':')[1];
     }, 
     innerAgendaItem: {     
