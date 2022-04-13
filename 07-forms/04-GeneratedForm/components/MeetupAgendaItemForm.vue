@@ -195,7 +195,11 @@ export default {
   },
 
   watch: {
-    'innerAgendaItem.startsAt'(newValue, oldValue) {   
+    'innerAgendaItem.startsAt'(newValue, oldValue) {
+      if (!newValue || !oldValue) {
+        return;
+      }
+         
       let dateEnd = this.getDateByTime(this.innerAgendaItem.endsAt);
       let dateStart = this.getDateByTime(oldValue);        
       let duration = dateEnd.getTime() - dateStart.getTime();
