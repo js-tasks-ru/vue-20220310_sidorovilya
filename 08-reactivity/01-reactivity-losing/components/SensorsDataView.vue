@@ -17,7 +17,7 @@ export default {
 
   data() {
     return {
-      sensors: null,
+      sensors: null
     };
   },
 
@@ -41,8 +41,8 @@ export default {
       this.setData(data);
     },
 
-    setData(sensors) {
-      this.sensors = sensors;
+    setData(sensors) {      
+      this.sensors = JSON.parse(JSON.stringify(sensors));
     },
   },
 };
