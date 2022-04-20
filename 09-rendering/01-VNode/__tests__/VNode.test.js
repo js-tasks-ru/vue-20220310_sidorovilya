@@ -14,7 +14,7 @@ describe('rendering/VNode', () => {
       const vnode = [h('span', { class: 'foo1' }, 'bar1'), h('span', { class: 'foo2' }, 'bar2')];
 
       const wrapper = mount(VNode, { props: { vnode } });
-      expect(wrapper.html()).toBe(`<span class="foo1">bar1</span><span class="foo2">bar2</span>`);
+      expect(wrapper.html().replace(/\n/g, '')).toBe(`<span class="foo1">bar1</span><span class="foo2">bar2</span>`);
     });
   });
 });
