@@ -1,9 +1,8 @@
 <script>
-// import { compile } from 'vue';
+import { compile } from 'vue';
 
 export default {
   name: 'TemplateRenderer',
-
   props: {
     template: {
       type: String,
@@ -20,5 +19,11 @@ export default {
       default: () => [],
     },
   },
+  render(...args) {
+    this.$.components = this.components;
+    const renderFunction = compile(this.template);
+    return renderFunction.call(this, this, ...args);
+  }  
+ 
 };
 </script>
